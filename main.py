@@ -8,9 +8,9 @@ array = [
     [0, 0, 0, 1, 0, 0, 0, 1, 0, 0],
     [1, 0, 0, 0, 1, 0, 0, 1, 0, 0],
     [0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
-    [0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
+    [0, 0, 0, 1, 0, 0, 1, 1, 0, 0],
     [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 1, 1, 0],
+    [0, 0, 0, 0, 0, 1, 0, 1, 1, 0],
     [1, 0, 0, 0, 0, 0, 0, 1, 0, 1],
 ]
 
@@ -91,9 +91,10 @@ def testIrrigate(x, y, array):
     return (ii1, ii2)
 
 coordslist = []
+irrigationIndex = irrigationLevels(irrigationSeeker(array))
 for indexlist in irrigationSeeker(array):
     if (indexlist[0] == 0):
-        print("(Test Irrigation in Process) Isolated cell with coordinates: (" + str(indexlist[1]) + ", " + str(indexlist[2]) + ").")
+        print("(Test Irrigation in Process) Isolated cell with coordinates: (" + str(indexlist[1]) + ", " + str(indexlist[2]) + ") and " + str(indexlist[0]) + " water source(s).")
         print("Test irrigation yields an increase to", testIrrigate(indexlist[1], indexlist[2], array)[1], "from", testIrrigate(indexlist[1], indexlist[2], array)[0])
         coordslist.append((testIrrigate(indexlist[1], indexlist[2], array)[1], indexlist[1], indexlist[2]))
     elif ((array[indexlist[1]][indexlist[2]]) == 0):
@@ -102,12 +103,13 @@ for indexlist in irrigationSeeker(array):
         coordslist.append((testIrrigate(indexlist[1], indexlist[2], array)[1], indexlist[1], indexlist[2]))
     else:
         print("Wet cell with coordinates: (" + str(indexlist[1]) + ", " + str(indexlist[2]) + ") and " + str(indexlist[0]) + " water source(s).")
-        #time.sleep(0.3)
 
-
-
+temparray = array
 # Calculate Difference in Irrigation
-print("The maximum possible irrigation level from irrigating a single community is", sorted(coordslist, key=itemgetter(0), reverse=True)[0][0], "achievable with irrigating cells: ")
+print("\nThe maximum possible irrigation level from irrigating a single community is", sorted(coordslist, key=itemgetter(0), reverse=True)[0][0], "achievable with irrigating cells: ")
 for cell in coordslist:
     if (cell[0] == sorted(coordslist, key=itemgetter(0), reverse=True)[0][0]):
         print("(" + str(cell[1]) + ", " + str(cell[2]) + ")")
+        temparray[cell[1]][cell[2]] = 1
+
+print("\nIf all the aforementioned maximum profit cells are irrigated, the irrigation level will increase from", irrigationIndex, "to", str(testIrrigate(indexlist[1], indexlist[2], temparray)[0]) + ".")
